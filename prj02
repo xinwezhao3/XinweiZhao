@@ -1,25 +1,33 @@
-%reset -f
-import numpy as np
-import matplotlib.pyplot as plt
+# BSM function
+import math
 import scipy.stats as ss
-0.471 seconds
+import numpy as np
+import time
+
 def d1f(St, K, t, T, r, sigma):
-    c1 = (math.log(St / K) + (r + 0.5 * sigma ** 2) * (T - t)) / (sigma * math.sqrt(T - t))
-    return c1
+    d1 = (math.log(St / K) + (r + 0.5 * sigma ** 2)
+          * (T - t)) / (sigma * math.sqrt(T - t))
+    return d1
+    
 def BSM_call_value(St, K, t, T, r, sigma):
-        c2 = d1f(St, K, t, T, r, sigma) - sigma * math.sqrt(T - t)
-        call_value = St * ss.norm.cdf(d1f(St, K, t, T, r, sigma)) - math.exp(-r * (T - t)) * K * ss.norm.cdf(d2)
-        return call_value
-0.007 seconds
-#An example is given here
-K = 110.0 #strike
+    d1 = d1f(St, K, t, T, r, sigma)
+    d2 = d1 - sigma * math.sqrt(T - t)
+    call_value = St * ss.norm.cdf(d1) - math.exp(-r * (T - t)) * K * ss.norm.cdf(d2)
+    return call_value
+
 S0 = 100.0 #initial stock price
+K = 110.0 #strike
 r=0.0475 #interest rate
 sigma = 0.20 #vol
 T = 1. #maturity
 Otype='C' #Call type
 n = 4 #number of periods
-t = np.linspace(0., T, n+1)[1:] #times to be used for geometric averaging stock price
-BSM_call_value(S0, K, T, 0, r, sigma)
+t = np.linspace(0., T, n+1)[1:] #times to be used for geometric averaging stock price    
 
-Out:5.943273183452838
+BSM_call_value(S0, K, 0, T, r_hat, sigma_hat)
+
+r_hat = 0.5*(sigma_hat)**2+((n+1)/(2*n))*(r-0.5*sigma**2)
+sigma_hat = (sigma/n)*math.sqrt((n+1)*(2*n+1)/6)
+
+GAC= math.exp((r_hat -r)*T)*BSM_call_value(S0, K, 0, T, r_hat, sigma_hat)
+print('The BSM_option_valuation is', GAC)
