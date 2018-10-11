@@ -1,0 +1,26 @@
+import numpy as np
+from BSM_option_valuation import *
+Today = np.datetime64('2018-09-27')
+Maturity = np.datetime64('2018-12-31')
+T = (Maturity - Today)/np.timedelta64(1,'D')/365 #time to maturity in year
+S0 = 290.68
+K = 288.
+r = .02
+Call = 9.23
+Otype='C' #Call
+print('If the volatility is 30%, we can calculate the call value is', BSM_call_value(S0, K, 0, T, r, sigma))
+
+
+call_value = BSM_call_value(S0, K, 0, T, r, sigma=0.3)
+print('The difference of computed call value and market value is %f' %np.abs(call_value - Call))
+The difference of computed call value and market value is 10.539938
+
+
+print('Implied volatility is', IVolBsm(S0, K, T, r, Call))
+
+# If the volatility is 30%
+vol = 0.3
+
+if __name__ == "__main__":
+    print('BSM %s option price is %f' %(iOpt.Type, iOpt.BsmPrice()))
+#when volatility = 0.11824219， BSM call price = market call price
